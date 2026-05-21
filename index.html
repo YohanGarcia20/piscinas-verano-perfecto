@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App - Piscinas Verano Perfecto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Paleta de Colores Mejorada */
+            --primary: #0f172a; /* Navy Blue oscuro */
+            --secondary: #1e293b; /* Navy Blue claro */
+            --accent: #0ea5e9; /* Light Blue */
+            --accent-hover: #0284c7;
+            --success: #10b981; /* Teal/Verde */
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-light: #f1f5f9;
+            --bg-white: #ffffff;
+            --text-dark: #334155;
+            --text-light: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Utilidades para alternar vistas */
+        .view {
+            display: none;
+            height: 100%;
+            width: 100%;
+            animation: fadeIn 0.4s ease;
+        }
+        .view.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================
+           1. VISTA DE LOGIN
+        ========================================== */
+        #login-view {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        .login-card {
+            background: var(--bg-white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card h1 {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .login-card p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-admin { background-color: var(--primary); }
+        .btn-admin:hover { background-color: var(--secondary); }
+        
+        .btn-tech { background-color: var(--accent); }
+        .btn-tech:hover { background-color: var(--accent-hover); }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--text-light);
+            font-size: 12px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+        .divider:not(:empty)::before { margin-right: .25em; }
+        .divider:not(:empty)::after { margin-left: .25em; }
+
+        /* ==========================================
+           2. VISTA DASHBOARD ADMIN (Web Desktop)
+        ========================================== */
+        #admin-view {
+            flex-direction: row;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            font-size: 20px;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header i { color: var(--accent); }
+
+        .nav-links {
+            list-style: none;
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+
+        .nav-links li {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            color: #cbd5e1;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-links li:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--accent);
+        }
+
+        .nav-links li.active {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--accent);
+        }
+
+        .logout-btn {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--danger);
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .topbar {
+            background-color: var(--bg-white);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--bg-white);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .card-icon.blue { background: #e0f2fe; color: var(--accent); }
+        .card-icon.green { background: #d1fae5; color: var(--success); }
+        .card-icon.orange { background: #fef3c7; color: var(--warning); }
+
+        .card-info h3 { font-size: 24px; color: var(--primary); margin-bottom: 4px; }
+        .card-info p { color: var(--text-light); font-size: 14px; }
+
+        /* Table */
+        .data-table-container {
+            background: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th { color: var(--text-light); font-weight: 500; font-size: 14px; }
+
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status.done { background: #d1fae5; color: #059669; }
+        .status.pending { background: #fef3c7; color: #d97706; }
+
+        /* ==========================================
+           3. VISTA TÉCNICO (Mobile First)
+        ========================================== */
+        #tech-view {
+            justify-content: center;
+            background-color: #334155; /* Fondo oscuro simulando entorno de desarrollo/fuera de app */
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 414px; /* Ancho de iPhone Max */
+            height: 100%;
+            max-height: 896px;
+            background-color: var(--bg-light);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .mobile-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .route-list {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .route-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--warning);
+        }
+
+        .route-card.completed {
+            border-left-color: var(--success);
+            opacity: 0.7;
+        }
+
+        .route-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .route-title { font-weight: 600; font-size: 16px; }
+        .route-time { color: var(--text-light); font-size: 14px; }
+        
+        .route-address {
+            color: var(--text-light);
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover:not(:disabled) {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-action:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-action.done { 
+            background-color: var(--success);
+        }
+
+        .btn-action.done:hover:not(:disabled) {
+            background-color: #059669;
+        }
+
+        .mobile-nav {
+            background: var(--bg-white);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            margin-top: auto;
+        }
+
+        .mobile-nav-item {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-item:hover {
+            color: var(--accent);
+            background-color: rgba(14, 165, 233, 0.1);
+        }
+
+        .mobile-nav-item.active { 
+            color: var(--accent);
+            background-color: rgba(14, 165, 233, 0.1);
+        }
+
+        .mobile-nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
+
+        /* Estilos adicionales para mejor interactividad */
+        button {
+            transition: all 0.3s ease;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        th {
+            background-color: #f8fafc;
+            user-select: none;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .route-card {
+            transition: all 0.3s ease;
+        }
+
+        .route-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-view" class="view active">
+        <div class="login-card">
+            <i class="fa-solid fa-water" style="font-size: 40px; color: var(--accent); margin-bottom: 15px;"></i>
+            <h1>Verano Perfecto</h1>
+            <p>Sistema de Gestión Integral V2.0</p>
+            
+            <form onsubmit="event.preventDefault();">
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" placeholder="RUT / Usuario" value="76.123.456-7">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" placeholder="Contraseña" value="123456">
+                </div>
+                
+                <div class="divider">Simulador de Roles (Demo)</div>
+                
+                <button type="button" class="btn-login btn-admin" onclick="switchView('admin-view')">
+                    <i class="fa-solid fa-chart-line"></i> Ingresar como Admin
+                </button>
+                <button type="button" class="btn-login btn-tech" onclick="switchView('tech-view')">
+                    <i class="fa-solid fa-truck-fast"></i> Ingresar como Técnico
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-view" class="view">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-water"></i> Verano Perfecto
+            </div>
+            <ul class="nav-links">
+                <li class="active" onclick="switchAdminSection('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</li>
+                <li onclick="switchAdminSection('clientes')"><i class="fa-solid fa-users"></i> Clientes</li>
+                <li onclick="switchAdminSection('planificacion')"><i class="fa-solid fa-map-location-dot"></i> Planificación</li>
+                <li onclick="switchAdminSection('facturacion')"><i class="fa-solid fa-file-invoice-dollar"></i> Facturación</li>
+                <li onclick="switchAdminSection('inventario')"><i class="fa-solid fa-boxes-stacked"></i> Inventario</li>
+            </ul>
+            <div class="logout-btn" onclick="switchView('login-view')">
+                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+            </div>
+        </nav>
+        
+        <main class="main-content">
+            <header class="topbar">
+                <h2>Panel de Control</h2>
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                    <span>Administrador</span>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon blue"><i class="fa-solid fa-clipboard-list"></i></div>
+                        <div class="card-info">
+                            <h3>14</h3>
+                            <p>Mantenciones Hoy</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon green"><i class="fa-solid fa-check-double"></i></div>
+                        <div class="card-info">
+                            <h3>85%</h3>
+                            <p>Rutas Completadas</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon orange"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="card-info">
+                            <h3>Cloro Fial</h3>
+                            <p>Stock Crítico</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h3>Estado de Rutas - Terreno</h3>
+                        <button type="button" class="btn-login btn-admin" style="width: auto; padding: 8px 15px; margin:0;" onclick="agregarNuevaRuta()"><i class="fa-solid fa-plus"></i> Nueva Ruta</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Dirección</th>
+                                <th>Técnico Asignado</th>
+                                <th>Hora Prog.</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Condominio Los Robles</td>
+                                <td>Av. Macul 1234</td>
+                                <td>Juan Pérez</td>
+                                <td>09:00 AM</td>
+                                <td><span class="status done">Efectuada</span></td>
+                            </tr>
+                            <tr>
+                                <td>Familia Soto (Piscina 10x5)</td>
+                                <td>Las Perdices 450</td>
+                                <td>Diego V.</td>
+                                <td>11:30 AM</td>
+                                <td><span class="status pending">En Camino</span></td>
+                            </tr>
+                            <tr>
+                                <td>Edificio Vista Andes</td>
+                                <td>Av. Ossa 990</td>
+                                <td>Juan Pérez</td>
+                                <td>15:00 PM</td>
+                                <td><span class="status pending">Pendiente</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="tech-view" class="view">
+        <div class="mobile-container">
+            <header class="mobile-header">
+                <div>
+                    <h3 style="font-size: 18px; margin-bottom: 4px;">Hola, Diego</h3>
+                    <p style="font-size: 13px; color: #cbd5e1;">Ruta del día: 3 visitas</p>
+                </div>
+                <div class="avatar" style="background-color: white; color: var(--primary);">DV</div>
+            </header>
+            
+            <div class="route-list">
+                <h4 style="margin-bottom: 15px; color: var(--text-dark);">Pendientes Hoy</h4>
+                
+                <div class="route-card" id="task-1">
+                    <div class="route-header">
+                        <span class="route-title">Familia Soto</span>
+                        <span class="route-time">11:30 AM</span>
+                    </div>
+                    <div class="route-address">
+                        <i class="fa-solid fa-location-dot"></i> Las Perdices 450, Macul
+                    </div>
+                    <button class="btn-action" id="btn-1" onclick="marcarCompletada('task-1', 'btn-1')">
+                        <i class="fa-solid fa-camera"></i> Registrar Mantención
+                    </button>
+                </div>
+
+                <div class="route-card">
+                    <div class="route-header">
+                        <span class="route-title">Edificio Alto Macul</span>
+                        <span class="route-time">14:00 PM</span>
+                    </div>
+                    <div class="route-address">
+                        <i class="fa-solid fa-location-dot"></i> Av. Consistorial 2000
+                    </div>
+                    <button class="btn-action" onclick="verDetalles('task-2')">Ver Detalles</button>
+                </div>
+            </div>
+
+            <nav class="mobile-nav">
+                <div class="mobile-nav-item active" onclick="switchTecnicSection('ruta', this)">
+                    <i class="fa-solid fa-list-check"></i>
+                    Ruta
+                </div>
+                <div class="mobile-nav-item" onclick="switchTecnicSection('insumos', this)">
+                    <i class="fa-solid fa-box"></i>
+                    Insumos
+                </div>
+                <div class="mobile-nav-item" onclick="switchView('login-view')">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Salir
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        // ==================== GESTIÓN DE VISTAS ====================
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active');
+            });
+            const view = document.getElementById(viewId);
+            if (view) {
+                view.classList.add('active');
+            } else {
+                console.warn('Vista no encontrada:', viewId);
+            }
+        }
+
+        // ==================== GESTIÓN DE SECCIONES ADMIN ====================
+        function switchAdminSection(section) {
+            // Actualizar nav activo
+            document.querySelectorAll('.nav-links li').forEach(li => {
+                li.classList.remove('active');
+            });
+            event.target.closest('li').classList.add('active');
+
+            // Cambiar contenido
+            const content = document.querySelector('.dashboard-content');
+            switch(section) {
+                case 'dashboard':
+                    content.innerHTML = getDashboardContent();
+                    break;
+                case 'clientes':
+                    content.innerHTML = getClientesContent();
+                    break;
+                case 'planificacion':
+                    content.innerHTML = getPlanificacionContent();
+                    break;
+                case 'facturacion':
+                    content.innerHTML = getFacturacionContent();
+                    break;
+                case 'inventario':
+                    content.innerHTML = getInventarioContent();
+                    break;
+            }
+        }
+
+        // ==================== CONTENIDOS DE SECCIONES ====================
+        function getDashboardContent() {
+            return `
+                <div class="cards-grid">
+                    <div class="card" onclick="alert('Showing 14 maintenance tasks for today')">
+                        <div class="card-icon blue"><i class="fa-solid fa-clipboard-list"></i></div>
+                        <div class="card-info">
+                            <h3>14</h3>
+                            <p>Mantenciones Hoy</p>
+                        </div>
+                    </div>
+                    <div class="card" onclick="alert('Completion rate: 85% - 12 of 14 routes completed')">
+                        <div class="card-icon green"><i class="fa-solid fa-check-double"></i></div>
+                        <div class="card-info">
+                            <h3>85%</h3>
+                            <p>Rutas Completadas</p>
+                        </div>
+                    </div>
+                    <div class="card" onclick="alert('Stock crítico de Cloro. Realiza un pedido urgente')">
+                        <div class="card-icon orange"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="card-info">
+                            <h3>Cloro Fial</h3>
+                            <p>Stock Crítico</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h3>Estado de Rutas - Terreno</h3>
+                        <button type="button" class="btn-login btn-admin" style="width: auto; padding: 8px 15px; margin:0;" onclick="agregarNuevaRuta()"><i class="fa-solid fa-plus"></i> Nueva Ruta</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Dirección</th>
+                                <th>Técnico Asignado</th>
+                                <th>Hora Prog.</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Condominio Los Robles</td>
+                                <td>Av. Macul 1234</td>
+                                <td>Juan Pérez</td>
+                                <td>09:00 AM</td>
+                                <td><span class="status done">Efectuada</span></td>
+                                <td><button type="button" onclick="editarRuta(1)" style="padding: 4px 8px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button></td>
+                            </tr>
+                            <tr>
+                                <td>Familia Soto (Piscina 10x5)</td>
+                                <td>Las Perdices 450</td>
+                                <td>Diego V.</td>
+                                <td>11:30 AM</td>
+                                <td><span class="status pending">En Camino</span></td>
+                                <td><button type="button" onclick="editarRuta(2)" style="padding: 4px 8px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button></td>
+                            </tr>
+                            <tr>
+                                <td>Edificio Vista Andes</td>
+                                <td>Av. Ossa 990</td>
+                                <td>Juan Pérez</td>
+                                <td>15:00 PM</td>
+                                <td><span class="status pending">Pendiente</span></td>
+                                <td><button type="button" onclick="editarRuta(3)" style="padding: 4px 8px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function getClientesContent() {
+            return `
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h3>Gestión de Clientes</h3>
+                        <button type="button" class="btn-login btn-admin" style="width: auto; padding: 8px 15px; margin:0;" onclick="agregarCliente()"><i class="fa-solid fa-plus"></i> Nuevo Cliente</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>RUT</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Frecuencia</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Familia Soto</td>
+                                <td>12.345.678-9</td>
+                                <td>+56 9 1234 5678</td>
+                                <td>soto@email.com</td>
+                                <td>Semanal</td>
+                                <td><button type="button" onclick="editarCliente(1)" style="padding: 4px 8px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button></td>
+                            </tr>
+                            <tr>
+                                <td>Condominio Los Robles</td>
+                                <td>76.123.456-7</td>
+                                <td>+56 2 2234 5678</td>
+                                <td>admin@robles.cl</td>
+                                <td>Quincenal</td>
+                                <td><button type="button" onclick="editarCliente(2)" style="padding: 4px 8px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function getPlanificacionContent() {
+            return `
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h3>Planificación de Rutas</h3>
+                        <button type="button" class="btn-login btn-admin" style="width: auto; padding: 8px 15px; margin:0;" onclick="crearRuta()"><i class="fa-solid fa-map"></i> Planificar Ruta</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ruta ID</th>
+                                <th>Técnico</th>
+                                <th>Fecha</th>
+                                <th>Paradas</th>
+                                <th>Distancia</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>RUTA-2024-001</td>
+                                <td>Juan Pérez</td>
+                                <td>12/05/2024</td>
+                                <td>5</td>
+                                <td>45 km</td>
+                                <td><span class="status done">Completada</span></td>
+                            </tr>
+                            <tr>
+                                <td>RUTA-2024-002</td>
+                                <td>Diego V.</td>
+                                <td>12/05/2024</td>
+                                <td>4</td>
+                                <td>38 km</td>
+                                <td><span class="status pending">En Progreso</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function getFacturacionContent() {
+            return `
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h3>Facturación</h3>
+                        <button type="button" class="btn-login btn-admin" style="width: auto; padding: 8px 15px; margin:0;" onclick="generarFactura()"><i class="fa-solid fa-receipt"></i> Generar Factura</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>FAC-001-2024</td>
+                                <td>Familia Soto</td>
+                                <td>10/05/2024</td>
+                                <td>$45,000</td>
+                                <td><span class="status done">Pagada</span></td>
+                                <td><button type="button" onclick="descargarPDF()" style="padding: 4px 8px; background: var(--success); color: white; border: none; border-radius: 4px; cursor: pointer;">PDF</button></td>
+                            </tr>
+                            <tr>
+                                <td>FAC-002-2024</td>
+                                <td>Condominio Los Robles</td>
+                                <td>12/05/2024</td>
+                                <td>$120,000</td>
+                                <td><span class="status pending">Pendiente</span></td>
+                                <td><button type="button" onclick="enviarCobro()" style="padding: 4px 8px; background: var(--warning); color: white; border: none; border-radius: 4px; cursor: pointer;">Cobrar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function getInventarioContent() {
+            return `
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h3>Inventario de Químicos</h3>
+                        <button type="button" class="btn-login btn-admin" style="width: auto; padding: 8px 15px; margin:0;" onclick="agregarProducto()"><i class="fa-solid fa-plus"></i> Nuevo Producto</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Stock Actual</th>
+                                <th>Mínimo</th>
+                                <th>Proveedor</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Cloro Fial</td>
+                                <td>5 kg</td>
+                                <td>20 kg</td>
+                                <td>Química Chilena S.A.</td>
+                                <td><span class="status pending" style="background: #fee2e2; color: #dc2626;">Crítico</span></td>
+                                <td><button type="button" onclick="ordenarCompra()" style="padding: 4px 8px; background: var(--danger); color: white; border: none; border-radius: 4px; cursor: pointer;">Comprar</button></td>
+                            </tr>
+                            <tr>
+                                <td>Carbonato de Sodio</td>
+                                <td>40 kg</td>
+                                <td>15 kg</td>
+                                <td>Química Chilena S.A.</td>
+                                <td><span class="status done">Normal</span></td>
+                                <td><button type="button" onclick="editarProducto(1)" style="padding: 4px 8px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // ==================== ACCIONES ADMIN ====================
+        function agregarNuevaRuta() {
+            alert('Abriendo formulario para crear nueva ruta...');
+        }
+
+        function editarRuta(id) {
+            alert('Editando ruta #' + id);
+        }
+
+        function agregarCliente() {
+            alert('Abriendo formulario para añadir nuevo cliente...');
+        }
+
+        function editarCliente(id) {
+            alert('Editando cliente #' + id);
+        }
+
+        function crearRuta() {
+            alert('Planificando nueva ruta...');
+        }
+
+        function generarFactura() {
+            alert('Generando nueva factura...');
+        }
+
+        function descargarPDF() {
+            alert('Descargando PDF de factura...');
+        }
+
+        function enviarCobro() {
+            alert('Enviando notificación de cobro al cliente...');
+        }
+
+        function agregarProducto() {
+            alert('Abriendo formulario para añadir producto...');
+        }
+
+        function editarProducto(id) {
+            alert('Editando producto #' + id);
+        }
+
+        function ordenarCompra() {
+            alert('Creando orden de compra para Cloro Fial...');
+        }
+
+        // ==================== SECCIONES TÉCNICO ====================
+        function switchTecnicSection(section, element) {
+            // Actualizar nav activo
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            // Cambiar contenido
+            const routeList = document.querySelector('.route-list');
+            switch(section) {
+                case 'ruta':
+                    routeList.innerHTML = getRutaContent();
+                    break;
+                case 'insumos':
+                    routeList.innerHTML = getInsumosContent();
+                    break;
+            }
+        }
+
+        function getRutaContent() {
+            return `
+                <h4 style="margin-bottom: 15px; color: var(--text-dark);">Pendientes Hoy</h4>
+                
+                <div class="route-card" id="task-1">
+                    <div class="route-header">
+                        <span class="route-title">Familia Soto</span>
+                        <span class="route-time">11:30 AM</span>
+                    </div>
+                    <div class="route-address">
+                        <i class="fa-solid fa-location-dot"></i> Las Perdices 450, Macul
+                    </div>
+                    <button class="btn-action" id="btn-1" onclick="marcarCompletada('task-1', 'btn-1')">
+                        <i class="fa-solid fa-camera"></i> Registrar Mantención
+                    </button>
+                </div>
+
+                <div class="route-card" id="task-2">
+                    <div class="route-header">
+                        <span class="route-title">Edificio Alto Macul</span>
+                        <span class="route-time">14:00 PM</span>
+                    </div>
+                    <div class="route-address">
+                        <i class="fa-solid fa-location-dot"></i> Av. Consistorial 2000
+                    </div>
+                    <button class="btn-action" id="btn-2" onclick="marcarCompletada('task-2', 'btn-2')">
+                        <i class="fa-solid fa-camera"></i> Registrar Mantención
+                    </button>
+                </div>
+            `;
+        }
+
+        function getInsumosContent() {
+            return `
+                <h4 style="margin-bottom: 15px; color: var(--text-dark);">Insumos Disponibles en Ruta</h4>
+                
+                <div style="background: var(--bg-white); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-weight: 600;">Cloro Fial</span>
+                        <span style="color: var(--success); font-weight: 600;">10 kg</span>
+                    </div>
+                    <div style="background: #e0f2fe; border-radius: 6px; height: 8px; overflow: hidden;">
+                        <div style="background: var(--accent); height: 100%; width: 75%;"></div>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-white); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-weight: 600;">Carbonato de Sodio</span>
+                        <span style="color: var(--success); font-weight: 600;">25 kg</span>
+                    </div>
+                    <div style="background: #e0f2fe; border-radius: 6px; height: 8px; overflow: hidden;">
+                        <div style="background: var(--accent); height: 100%; width: 90%;"></div>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-white); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-weight: 600;">Ácido Muriático</span>
+                        <span style="color: var(--warning); font-weight: 600;">5 L</span>
+                    </div>
+                    <div style="background: #e0f2fe; border-radius: 6px; height: 8px; overflow: hidden;">
+                        <div style="background: var(--warning); height: 100%; width: 35%;"></div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-action" onclick="solicitarInsumos()" style="margin-top: 10px;">
+                    <i class="fa-solid fa-truck"></i> Solicitar Reabastecimiento
+                </button>
+            `;
+        }
+
+        function verDetalles(taskId) {
+            alert('Mostrando detalles de la tarea ' + taskId);
+        }
+
+        function marcarCompletada(cardId, btnId) {
+            const card = document.getElementById(cardId);
+            const btn = document.getElementById(btnId);
+            
+            if (card && btn) {
+                card.classList.add('completed');
+                btn.classList.add('done');
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Finalizada (Sincronizada)';
+                btn.disabled = true;
+                
+                alert('✅ Mantención registrada. Se ha descontado el stock de químicos y notificado al Administrador.');
+            }
+        }
+
+        function solicitarInsumos() {
+            alert('Solicitud de insumos enviada. Se notificará al administrador.');
+        }
+    </script>
+</body>
+</html>
