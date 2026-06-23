@@ -130,5 +130,30 @@
     <script src="js/admin.js"></script>
     <script src="js/tech.js"></script>
 
+    <!-- Modal Dinámico -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Título</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form id="modal-form" onsubmit="handleFormSubmit(event)">
+                <div id="modal-body">
+                    <!-- Contenido dinámico -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" style="background: var(--text-light); color: white;" onclick="closeModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
